@@ -5,7 +5,7 @@ import path from "path";
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
 const getDatabasePages = async () => {
-  const databaseId = "6226b2542e9e44d5adf59e95492fd4cf";
+  const databaseId = process.env.NOTION_PAGE_ID;
   const response = await notion.databases.query({
     database_id: databaseId,
   });
