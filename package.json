@@ -1,5 +1,6 @@
 {
-	"dependencies": {
-		"@notionhq/client": "^2.2.15"
-	}
+  "dependencies": {
+    "@notionhq/client": "^2.2.15"
+  },
+  "type": "module"
 }
