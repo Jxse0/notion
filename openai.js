@@ -13,7 +13,8 @@ const response = await openai.chat.completions.create({
   messages: [
     {
       role: "user",
-      content: "Fasse zusammen:" + textContent,
+      content:
+        "Fasse zusammen ohne dein eigenes wissen zu verwenden:" + textContent,
     },
   ],
 });
