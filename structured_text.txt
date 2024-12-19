@@ -1,0 +1,325 @@
+# Business Intelligence & Analytics – Grundlagen und praktische Anwendungen
+    ## Historisch gewachsene Formen entscheidungsorientierter Datenhaltung
+        - Ursprung und Zielgruppe: IT-basierte Entscheidungsunterstützung wurde zunächst ausschließlich für Führungskräfte entwickelt, um dispositive Arbeitsleistungen (Leitung und Lenkung betrieblicher Vorgänge) zu unterstützen.
+        - Datenkategorien:
+            - Operative Daten: Entstehen in administrativen, dispositiven und Abrechnungssystemen, hauptsächlich durch OLTP-Systeme (z. B. Buchungen oder Bestellungen).
+            - Entscheidungsorientierte Daten (früher "dispositive Daten"): Unterstützen die Entscheidungsfindung und unterscheiden sich grundlegend von operativen Daten.
+        - Herausforderungen in gewachsenen Strukturen:
+            - Direkter Zugriff von entscheidungsunterstützenden Systemen auf operative Daten ist ineffizient.
+            - Bis in die 1990er-Jahre erfolgte Datenhaltung in isolierten, herstellerspezifischen Systemen mit individuellen Kopien und Extrakten aus operativen und externen Quellen.
+        - Nachteile dieser Ansätze:
+            - Performanceprobleme: Wiederholtes Kopieren und Extrahieren belastet operative Systeme.
+            - Inkonsistenz: Zeitlich asynchrone Datenextraktion führt zu widersprüchlichen Datenwerten.
+            - Aufwändigkeit und Fehleranfälligkeit: Harmonisierung und Verdichtung der Daten müssen für jedes Subsystem separat erfolgen.
+            - Datenverlustgefahr: Änderungen oder Löschungen in vorgelagerten Systemen beeinträchtigen nachgelagerte Prozesse.
+        - Daten-Pool-Ansatz:
+            - Daten werden durch Kopieren/Extrahieren in einen dedizierten Datenpool übertragen, getrennt von den Quellsystemen.
+            - Vorteile:
+                - Zeitliche Konsistenz der Daten.
+                - Reduzierte Performance-Beeinträchtigung der operativen Systeme.
+            - Nachteile:
+                - Erforderliche Harmonisierung und Verdichtung weiterhin separat für jedes System.
+                - Semantische Inkonsistenzen und keine einheitliche Datensicht.
+        - Heutige Herausforderungen:
+            - Viele Unternehmen replizieren die alten Ansätze aufgrund mangelnder übergreifender BI-Strategien.
+            - Dezentrale Analytics- oder Big-Data-Initiativen fördern oft isolierte Datenhaltung, die ineffizient und widersprüchlich ist.
+    ## Data-Warehouse-Konzept
+        ### Begriff des Data Warehouse (DWH)
+            Ein Data Warehouse (DWH) ist eine logisch zentralisierte, von operativen Systemen getrennte Datenhaltung, die als konsistente Datenbasis für die Entscheidungsunterstützung dient. Es wurde wesentlich von William H. Inmon definiert, der vier zentrale Merkmale beschreibt:
+            1. Themenorientierung:
+                - Daten sind an Entscheidungsbedarfen (z. B. Unternehmensstruktur, Kundenstruktur) ausgerichtet und nicht an operativen Prozessen.
+            1. Integration:
+                - Zusammenführung unterschiedlicher Datenquellen (interne und externe), um eine widerspruchsfreie und einheitliche Datenbasis zu schaffen.
+            1. Zeitraumbezug:
+                - Daten decken Zeiträume (z. B. Wochen, Monate) ab, wobei in modernen Systemen die Granularität bis auf Transaktionsebene erweitert werden kann.
+            1. Nicht-Volatilität:
+                - Daten im DWH sind dauerhaft gespeichert und werden nicht kontinuierlich überschrieben wie in operativen Systemen. Historisierungskonzepte helfen, Datenwachstum zu managen.
+        ### Architekturvarianten von DWH-/Data-Mart-Lösungen
+            Es gibt verschiedene Ansätze zur Gestaltung von DWH-Architekturen, abhängig von Unternehmensbedarfen und gewachsenen IT-Strukturen:
+            1. Unabhängige Data Marts:
+                - Kleine, spezifische Datenhaltungen ohne übergreifende Konsistenz. Problematisch bei übergreifenden Auswertungen.
+            1. Abgestimmte Data Marts:
+                - Gemeinsame Datenmodelle stellen Konsistenz und Integrität sicher, jedoch weiterhin mehrfacher Datenaufbereitungsaufwand.
+            1. Zentrales Core-DWH (C-DWH):
+                - Einheitliche, zentrale Datenbasis ohne Data Marts. Geeignet für kleinere Lösungen, jedoch mit Performance-Nachteilen bei großen Datenvolumina.
+            1. Mehrere C-DWHs:
+                - Unterstützt divergierende Geschäftsprozesse, besonders bei Konzernen mit mehreren Geschäftseinheiten.
+            1. C-DWH mit abhängigen Data Marts:
+                - Data Marts sind anwendungsbezogene Extrakte des C-DWH.
+            1. DWH-Architektur-Mix:
+                - Kombination aus C-DWHs, abhängigen und unabhängigen Data Marts, oft in historisch gewachsenen Umgebungen.
+        ### ODS-erweiterte DWH-Architektur
+            Ein Operational Data Store (ODS) ergänzt das DWH, indem es aktuelle, transaktionsorientierte Daten integriert, ohne sie langfristig zu historisieren.
+            - ETL-Prozess (Extraction, Transformation, Loading):
+                - Überführt Daten aus operativen Systemen und externen Quellen in das DWH, wobei die Daten harmonisiert und integriert werden.
+            - Hub-and-Spoke-Architektur:
+                - Core-DWH als zentrale Datenbank (Hub), von der abhängige Data Marts (Spokes) abgeleitet werden.
+        ### Herausforderungen und Alternativen
+            - Probleme traditioneller Ansätze:
+                - Komplexität und hohe Aufwände bei der Transformation und Integration.
+                - Historienbetrachtung oft nicht möglich in operativen Systemen.
+                - Ressourcenbelastung bei Abfragen auf operativen Systemen.
+            - Virtuelle DWHs:
+                - Daten werden direkt aus Quellsystemen abgerufen und ad-hoc transformiert (Enterprise Information Integration, EII).
+                - Noch nicht etabliert, da heterogene Systeme und externe Daten die Integration erschweren.
+            - Moderne Entwicklungen:
+                - Fortschritte wie In-Memory-Technologien (z. B. SAP HANA) reduzieren den Bedarf an physischen DWHs, jedoch bleiben DWHs weiterhin relevant, insbesondere bei externen und Legacy-Datenquellen.
+    ## Detaillierung ODS-erweiterter Data Warehouses
+        ### Transformationsprozess – ETL
+            Der ETL-Prozess (Extraction, Transformation, Loading) ist zentral, um operative Daten in entscheidungsorientierte Daten für Data Warehouses (DWH) umzuwandeln. Er umfasst die Schritte Filterung, Harmonisierung, Aggregation und Anreicherung, die zusammen die Datenqualität sicherstellen und nutzbare Informationen liefern.
+            Filterung
+            Die Filterung selektiert relevante Daten und entfernt syntaktische sowie semantische Fehler.
+            - Extraktion: Daten werden aus heterogenen Quellen in Staging Areas oder Corporate Memory übertragen.
+            - Bereinigung: Datenmängel werden korrigiert, kategorisiert in:
+                - Automatisierbare Fehler (z. B. Format- oder Wertefehler).
+                - Fehler mit manueller Nachbearbeitung (z. B. durch Experten nach Plausibilitätsprüfungen).
+                - Fehler, die nur von Fachspezialisten erkannt und korrigiert werden können.Werkzeuge wie Cleansing- und Scrubbing-Komponenten unterstützen diesen Prozess.
+            Harmonisierung
+            Die Harmonisierung sorgt für konsistente und vereinheitlichte Daten.
+            - Syntaktische Harmonisierung:
+                - Beseitigung von Schlüsseldisharmonien (z. B. durch Mapping-Tabellen).
+                - Einheitliche Kodierung und Lösung von Synonymen (gleiche Bedeutung, unterschiedliche Namen) und Homonymen (gleiche Namen, unterschiedliche Bedeutung).
+            - Fachliche Harmonisierung:
+                - Einheitliche Definition betriebswirtschaftlicher Kennzahlen (z. B. Währungen, Zeiträume).
+                - Festlegung der Granularität für spezifische Analysen.
+            Aggregation
+            Die Aggregation verdichtet harmonisierte Daten, um sie für anwendungsübergreifende Analysen nutzbar zu machen.
+            - Dimensionshierarchien (z. B. Kunde → Kundengruppe → Gesamt) strukturieren die Daten.
+            - Historische Konsistenz wird durch Zeitstempel gewährleistet.
+            - Die Aggregation verlagert Teile der Funktionalität von Anwendungen in die Datenhaltung.
+            Anreicherung
+            Die Anreicherung berechnet betriebswirtschaftliche Kennzahlen und integriert sie in die Datenbasis.
+            - Kennzahlen werden auf harmonisierten oder aggregierten Daten basierend berechnet (z. B. wöchentliche Deckungsbeiträge).
+            - Vorteile sind konsistente Werte, schnelle Abfragen und ein einheitliches betriebswirtschaftliches Instrumentarium.
+            Der ETL-Prozess stellt durch Filterung, Harmonisierung, Aggregation und Anreicherung sicher, dass die Daten im Data Warehouse konsistent, hochwertig und entscheidungsrelevant sind.
+        ### Core Data Warehouse und Data Marts
+            Das Core Data Warehouse (C-DWH), auch Basisdatenbank genannt, ist die zentrale Datenhaltungskomponente des DWH-Konzepts. Es dient als Sammelstelle für sämtliche entscheidungsunterstützenden Daten und erfüllt wichtige Funktionen:
+            - Sammel- und Integrationsfunktion: Aufnahme aller analyserelevanten Daten als logisch zentraler Speicher.
+            - Distributionsfunktion: Versorgung nachgeschalteter Data Marts mit Daten.
+            - Qualitätssicherungsfunktion: Sicherstellung der syntaktischen und semantischen Stimmigkeit transformierter Daten.
+            ### Nutzung und Verwaltung
+            Eine direkte Nutzung des C-DWH für Endbenutzeranalysen ist kontrovers. Anfangs wurde Power-Usern der Zugriff ermöglicht, doch negative Erfahrungen (z. B. durch fehlerhafte SQL-Abfragen und hohe Datenvolumina) führten dazu, dass Analysen zunehmend in Data Marts ausgelagert werden. Heute wird das C-DWH meist ausschließlich von der IT-Abteilung verwaltet.
+            Das C-DWH orientiert sich an einer technischen Optimierung der Datenstrukturen, um Beladungen, Modifikationen und Weitergaben an Data Marts performant und sicher zu gewährleisten. Funktionen wie Aggregation und Anreicherung stehen weniger im Fokus, es sei denn, sie sind mehrfach in verschiedenen Data Marts erforderlich.
+            ### Aktualisierungsvarianten
+            Daten im C-DWH werden bedarfsabhängig aktualisiert, wobei drei Varianten üblich sind:
+            - Änderungsquantitätsbasiert: Datenübertragung bei Erreichen einer definierten Änderungsanzahl.
+            - Periodisch: Zeitgesteuerte Aktualisierungen (z. B. stündlich, täglich). Häufig verursachen sie Belastungen der operativen Systeme.
+            - Echtzeit: Transaktionssynchrones Laden der Daten, was hohe Komplexität und spezielle Beladungssysteme erfordert.
+            ### Data Marts im Vergleich zum C-DWH
+            Data Marts sind kleiner, stärker anwendungsorientiert und auf spezifische Benutzerkreise oder Aufgaben zugeschnitten. Sie enthalten oft:
+            - Anwendungsspezifische Datenorganisation.
+            - Vordefinierte Hierarchien, Aggregate und fachliche Kennziffern.
+            Kritiker sehen Data Marts häufig als Teil der Applikation, da sie Datenhaltung, Funktionalität und Benutzeroberflächen eng verzahnen. Sie werden häufig mit Reporting- und OLAP-Technologien assoziiert.
+            ### Technologien und Datenmodellierung
+            C-DWHs basieren überwiegend auf relationalen Datenbanken, die seit den 1980er-Jahren etabliert sind. Diese gelten als sicher, stabil und skalierbar.
+            - Relationale Datenmodelle: Ermöglichen die Darstellung von Objekten und Beziehungen in zweidimensionalen Tabellen.
+            - Normalisierung: Redundanz und Anomalien werden durch die Einhaltung von Codd’schen Normalformen vermieden.
+            Zusätzlich finden in kommerziellen Ansätzen spaltenorientierte, In-Memory-Datenbanken sowie Big-Data- und NoSQL-Technologien zunehmend Anwendung.
+        ### Operational Data Store
+            Der Operational Data Store (ODS) ist ein harmonisierter Datenpool, der die operative Transaktionsverarbeitung mit der entscheidungsunterstützenden Systemlandschaft verbindet. Er ermöglicht taktische Entscheidungen im Tagesgeschäft und bietet die Grundlage für prozessorientierte Business-Intelligence-Ansätze.
+            Charakteristika des ODS:
+            - Themenorientierung: Daten werden entlang entscheidungsrelevanter Dimensionen wie Produkte, Regionen oder Kunden strukturiert.
+            - Integration: Daten aus operativen Quellsystemen werden transformiert, um eine einheitliche und widerspruchsfreie Datenbasis zu schaffen. Fokus liegt auf Filterung und Harmonisierung.
+            - Zeitpunktbezug: Keine langfristige Historisierung; Daten werden nur für Tage oder Wochen gespeichert, meist aus Recovery-Gründen.
+            - Volatilität: Daten im ODS werden regelmäßig aktualisiert und überschrieben, wobei die Aktualisierung transaktionssynchron, stündlich oder täglich erfolgen kann.
+            - Hoher Detaillierungsgrad: Daten werden auf Transaktionsebene gespeichert, um detaillierte Analysen zu ermöglichen.
+            Unterschiede zum Data Warehouse:
+            - Im Gegensatz zum Data Warehouse (DWH) speichert das ODS keine langfristigen historischen Daten, sondern bietet zeitnahe Informationen für operative Analysen.
+            - Der Fokus liegt auf aktuellen, detaillierten und volatilen Daten.
+            Einsatz des ODS in der Geschäftsprozessabwicklung:
+            - ODS wird in Echtzeit-Anwendungen genutzt, z. B. in Call-Centern, ATMs, oder zur Lieferungsverfolgung im Supply Chain Management.
+            - Es ermöglicht einen ganzheitlichen Blick auf Geschäftsprozesse und dient der Enterprise Application Integration (EAI).
+            Operational BIA:
+            - Operational BIA kombiniert Business-Intelligence-Methoden mit prozessualen Ablaufdaten, um Echtzeit- oder Near-Real-Time-Unterstützung für zeitkritische Entscheidungen bereitzustellen.
+            - Einsatzbeispiele:
+                - Online Fraud Detection: Identifikation von Betrugsfällen in Versicherungen und Banken durch Abgleich aktueller Daten mit Data-Mining- und Machine-Learning-Modellen.
+                - Logistik: Analysen über Flugbewegungen, Gepäcklogistik und Wetterdaten zur strategischen Planung und operativen Steuerung an Flughäfen.
+                - Real-time CRM: In Casinos werden Kundenverhalten, Präferenzen und Loyalität in Echtzeit analysiert, um personalisierte Angebote direkt während des Spielverlaufs zu unterbreiten.
+            Der ODS erweitert traditionelle DWH-Architekturen, indem er operative Daten bereitstellt, die sowohl für Echtzeitprozesse als auch zur strategischen Planung genutzt werden können.
+        ### Metadaten, Stammdaten und Referenzdaten
+            Metadaten
+            Metadaten beschreiben die Bedeutung und Eigenschaften von Objekten, um deren Interpretation, Verwaltung und Nutzung zu erleichtern. Im Kontext der Datenverarbeitung umfassen sie alle Informationen, die für Analyse, Entwicklung und Betrieb eines Informationssystems notwendig sind. Im BIA-Bereich (Business Intelligence & Analytics) spielen Metadaten eine zentrale Rolle und begleiten den gesamten Lebenszyklus von BIA-Systemen.
+            - Nutzungskategorien von Metadaten:
+                - Passive Metadaten: Dokumentieren Struktur, Entwicklungsprozesse und Datenverwendung.
+                - (Semi-)aktive Metadaten: Werden zur Laufzeit interpretiert und steuern Transformations- oder Analyseprozesse.
+            - Technische und fachliche Metadaten:
+                - Technische Metadaten unterstützen IT-orientierte Prozesse (z. B. Filterung).
+                - Fachliche Metadaten fokussieren auf betriebswirtschaftliche Interpretationen (z. B. Harmonisierung, Anreicherung).
+            Vorteile des Metadatenmanagements:
+            - Effizienzsteigerung: Verbesserte Anpassung, Wartung und Wiederverwendbarkeit von Daten und Prozessen.
+            - Effektivität: Sicherstellung der Datenqualität (Konsistenz, Aktualität, Genauigkeit).
+            - Berechtigungsverwaltung: Zentrale Benutzerrollen ermöglichen konsistente Zugriffsrechte.
+            - Begriffsverständnis: Metadaten fördern eine einheitliche Terminologie (Single Point of Truth).
+            Architekturvarianten des Metadatenmanagements:
+            1. Zentralisiert: Alle Metadaten in einem Repository; bietet globale Konsistenz, jedoch mit Abhängigkeit und Wartungsaufwand.
+            1. Dezentralisiert: Lokale Repositories je Komponente; flexibel, jedoch mit Synchronisationsproblemen.
+            1. Föderiert: Kombination aus zentralem Repository für gemeinsame Metadaten und lokalen Repositories.
+            Stammdaten und Referenzdaten
+            Stammdaten sind grundlegende und anwendungsübergreifende Daten wie Kunden-, Produkt- oder Lieferantendaten. Referenzdaten sind Wertemengen oder Klassifikationen wie ISO-Ländercodes oder Währungscodes, auf die Systeme verweisen.
+            - Stammdatenmanagement:
+                - Stammdaten sind kritisch für BIA, da sie grundlegende Analysedimensionen (z. B. Kunden, Regionen) bilden.
+                - Architekturansätze:
+                    - Peer-to-Peer-Integration: Bilaterale Schnittstellen zwischen Systemen.
+                    - Zentrales Stammdatenmanagement-System: Ein zentraler Speicher für alle Systeme.
+                    - Föderierter Ansatz: Verzeichnisdienst verweist auf gültige Stammdaten in verschiedenen Systemen.
+                    - Führendes System: Ein System (z. B. ERP) definiert die gültigen Stammdaten.
+            Herausforderungen:
+            - Harmonisierung von Stammdaten ist oft aufwendig.
+            - Der Betrieb eines umfassenden Stammdatenmanagements erfordert erhebliche Ressourcen, weshalb er häufig nur partiell umgesetzt wird.
+            Metadaten, Stammdaten und Referenzdaten sind wesentliche Bausteine für die Effizienz und Qualität moderner BIA-Systeme und deren Analysen.
+    ## Big Data und der Data Lake
+        ### Big Data – Begriffsabgrenzung
+            Big Data beschreibt Technologien und Konzepte zur Handhabung großer, heterogener und schnell entstehender Datenmengen. Die zentralen Charakteristika, bekannt als die 3Vs, sind:
+            - Volume: Große Datenmengen, oft im Petabyte-Bereich.
+            - Variety: Unterschiedliche Datenformate (strukturierte, semi-strukturierte und unstrukturierte Daten wie Text, Audio oder Video).
+            - Velocity: Hohe Geschwindigkeit bei der Erfassung und Verarbeitung von Daten (Echtzeit- oder Near-Real-Time-Verarbeitung).
+            Weitere genannte „Vs“ wie Value (Nutzen) oder Veracity (Genauigkeit) unterstreichen eher die Sinnhaftigkeit von Big-Data-Lösungen.
+        ### Technologien und Werkzeuge
+            Big-Data-Lösungen setzen auf horizontale Skalierung (scale-out), bei der Lasten auf viele Server verteilt werden. Statt relationaler ACID-Datenbanken (vollständige Konsistenz) kommen NoSQL-Datenbanken zum Einsatz, die BASE-Kriterien (Basic Availability, Soft State, Eventual Consistency) erfüllen.
+            NoSQL-Datenbanktypen:
+            - Key Value Stores: Einfache Schlüssel-Wert-Paare.
+            - Document Stores: Ablage polystrukturierter Dokumente (XML, JSON).
+            - Wide Column Stores: Flexible Tabellen mit variabler Spaltenanzahl.
+            - Graph-Datenbanken: Speziell für vernetzte Informationen (z. B. soziale Netzwerke).
+            Big-Data-Systeme setzen auf verteilte Dateisysteme, Komponenten für Datenintegration, Metadatenverwaltung (Data Catalogs) und Analysewerkzeuge.
+        ### Das Konzept des Data Lake
+            Ein Data Lake ist eine Big-Data-Datenhaltung, die polystrukturierte Rohdaten in ihrem Ursprungsformat speichert. Im Gegensatz zu einem Data Warehouse (DWH) erfolgt hier die Transformation der Daten erst in nachgelagerten Systemen (Schema on Read).
+            Zonenstruktur eines Data Lake:
+            - Transient Zone: Eingangsbereich für extrahierte Daten; erste Transformationen wie Anonymisierung.
+            - Raw Data Zone: Speicherung unbearbeiteter Rohdaten.
+            - Curated Zone: Bereinigte und harmonisierte Daten mit Verweisen auf Stamm- und Referenzdaten.
+            - Discovery Sandbox: Direkter Zugriff für Analysten (z. B. Data Scientists).
+            - Consumption Zone: Vollständig transformierte Daten für Endnutzer und Analyseanwendungen.
+            Governance und Risiken:
+            Ohne Konzeptualisierung und Metadatenmanagement können Data Lakes zu Data Swamps (unbrauchbaren Datensammlungen) verkommen.
+        ### Big Data im Kontext der BIA
+            Ein Data Lake ergänzt das klassische relationale Data Warehouse, ersetzt es jedoch nicht:
+            - Data Warehouse: Eignet sich für strukturierte Daten, die hohe Konsistenz und Genauigkeit erfordern.
+            - Data Lake: Speichert Rohdaten, die für komplexe Analysen (z. B. mit Deep Learning) genutzt werden.Beispiel: Bilder werden im Data Lake gespeichert; die daraus extrahierten Kategorien (z. B. Inhaltsattribute) fließen in das DWH für strukturierte Analysen.
+    ## Anbindung der Datenbereitstellungsschicht
+        
+Die Datenbereitstellungsschicht ermöglicht den Zugriff auf die bereinigten und konsistenten Daten aus dem Data Warehouse (DWH), Data Marts oder Operational Data Stores (ODS). Je nach Anwendungsfall variieren die Anforderungen an Aktualität und Reaktionszeit, was zur Entwicklung verschiedener Data-Warehousing-Ansätze geführt hat.
+
+        ### Latenzzeiten in BIA-Systemen
+            Die Aktionszeit ist die Gesamtdauer von der Erfassung eines Geschäftsvorfalls bis zur Umsetzung einer Maßnahme. Sie besteht aus:
+            - Datenlatenz: Zeit für die Datenbereitstellung im DWH (Filterung, Harmonisierung, Aggregation, Anreicherung).
+            - Analyselatenz: Zeit für Analyse, Aufbereitung und Bereitstellung von Informationen.
+            - Entscheidungslatenz: Zeit für die Informationsaufnahme und Entscheidungsfindung.
+            - Umsetzungslatenz: Zeit für die Umsetzung der Maßnahme.
+        ### Implementierungsvarianten der Data-Warehousing-Ansätze
+            - Klassisches Data Warehousing
+                - Merkmale: Periodische ETL-Batchverarbeitung (täglich, wöchentlich, monatlich).
+                - Anwendung: Ex-post-Analysen, Planungs- und Kontrollinstrumente.
+                - Vorteil: Hohe Konsistenz der Daten.
+                - Nachteil: Keine Optimierung der Latenzzeiten.
+            - Closed-Loop Data Warehousing
+                - Merkmale: Rückkopplung von Analyseergebnissen in operative Systeme zur Unterstützung weiterer Entscheidungen.
+                - Anwendung: CRM-Anwendungen (z. B. Produktempfehlungen auf Basis von Kundensegmentierung).
+                - Vorteil: Verkürzt die Umsetzungslatenz durch direkte Integration der Analyseergebnisse.
+            - Real-time Data Warehousing
+                - Merkmale: Echtzeit-Integration der Transaktionsdaten mit minimaler Latenz.
+                - Anwendung: Zeitkritische Anwendungen wie Wertpapierhandel.
+                - Vorteil: Verringerung der Datenlatenz durch Ablösung batchorientierter Prozesse.
+                - Technologie: Einsatz von ODS und Enterprise-Application-Integration-Systemen.
+            - Active Data Warehousing
+                - Merkmale: Automatisierte Entscheidungsunterstützung durch die Nutzung von Regeln (Event-Condition-Action-Modell) und Data-Mining-Modellen.
+                - Anwendung: Operative Prozesse wie Flugplananpassungen oder Zahlungsausfallsüberwachung.
+                - Vorteil: Verkürzt Analyse-, Entscheidungs- und Umsetzungslatenz.
+            - Analyse von Streaming-Daten
+                - Merkmale: Echtzeit-Analyse kontinuierlicher Datenströme (z. B. Sensor- oder Clickstream-Daten).
+                - Technologie: Complex Event Processing (CEP) und Window-basierte Verarbeitung.
+                - Anwendung: Operative Steuerungsszenarien wie Maschinenüberwachung oder Logistik-Tracking.
+                - Vorteil: Ermöglicht nahezu verzögerungsfreie Entscheidungen.
+                - Architektur: Lambda- und Kappa-Architektur kombinieren Batch- und Echtzeitverarbeitung.
+        ### Zusammenfassung der Implementierungsansätze
+            Die Wahl des Ansatzes hängt vom betrieblichen Bedarf ab:
+            - Klassisches Data Warehousing: Für planungsorientierte Anwendungen mit weniger Zeitdruck.
+            - Closed-Loop Data Warehousing: Für systematische Rückkopplung von Analyseergebnissen.
+            - Real-time Data Warehousing: Für zeitkritische Datenanalysen.
+            - Active Data Warehousing: Für automatisierte Entscheidungsfindung und -umsetzung.
+            - Streaming-Daten-Verarbeitung: Für Echtzeit-Analysen im Big-Data-Umfeld.
+            Oft werden mehrere Ansätze kombiniert, um den unterschiedlichen Anforderungen gerecht zu werden. Streaming-Daten ergänzen dabei bestehende Architekturen, besonders im Kontext von Echtzeit- und Active-Data-Warehousing.
+# 📝 Lecture Notes
+    ### 18/12/2024
+        - Wir gehen nicht in die Tiefe, wichtig ist es das Thema zu verstehen aber als Data Scientist nimmt eher die Daten
+        - Als Rolle AG erstellen wir ein Scenario als Aufgabe für eine andere Gruppe
+        - Die Hausarbeit schreiben wir in der Rolle des DS
+        - Thema ist das Thema der Hausarbeit
+        - Gewähltes Thema 10 “Ein Logistikdienstleister” gewählt für die Hausarbeit und erstellen das Scenario für Thema 5
+        - Wiederkehrender Informationsbedarfe z.B. Umsatz
+    ### 19/12/2024
+        - Entscheidungsorientierte Daten ist ein alter begriff da trifft es seiner Meinung nach Analytische Daten besser
+        - Analysestrukturen
+            - strukturiert: Beispiel: Wir wissen genau was wir bekommen und das wir auf jeden Fall ein Ergebnis bekommen z.B. Umsatzanalyse
+        - Schema-on-
+            - write: wäre so der Data Warehouse Ansatz, ETL, brauch beim abfragen keine großes Analyse know how; SQL abfragen
+            - read: benötigt größeres Analyse know how, hab aber mehr Flexibilität
+        - Analyse in der Quelle
+            - Bsp. ERP Systeme
+            - strukturierte Analyse
+            - Man muss aufpassen das man Operativen Vorgänge nicht stört, darum darf man nicht zu Große Operationen durchführen
+            - Man hat nur diese eine Quelle
+            - Daten sind hoch aktuell
+        - Data Warehouse
+            - strukturierte Analyse
+            - Historische Daten
+        - Data Mart
+            - kann man schon fast kleines Data Warehouse nennen
+            - unabhängige Data Marts gründe:
+                - man hat halt mit data marts angefangen 
+                - vielleicht ist der transformierte Datenbestand so komplex ist das wir ein Data Mart machen und dann erst ins Data Warehouse (also optional ins Data Warehouse)
+        - Operational Data Store
+            - Sehr Aktuell
+            - Sinnvoll wenn es mehr als eine Quelle zu betrachten ist, kannst sonst ja direkt ins Quellsystem
+            - Historisierung ist nicht wichtig
+            - z.B. Bäckerei: Lagerbestand, Schichtbesetzung, Vorbestellung → Wie viele Backwaren können und sollten wir morgen produzieren?
+        - Ergänzende Architekturkomponente 
+            - Können unterschiedliche Server sein
+            - Staging Area
+                - Sammlung der Rohdaten
+            - Cleansing Area
+                - Transformation
+            - Archivierung
+        - Data Lake
+            - All mögliche Datenstrukturen
+            - Analysen sind Unstrukturiert bzw semi strukturiert
+        - Real-Time Processing
+            - Lambda-Architektur
+                - Stromdaten gehen in ein Ingestion Layer wo die Daten dann aufbereitet gespeichert werden und in einem anderem weg werden die daten direkt weiter zum server gesendet Unaufbereitet
+            - Kappa-Architektur
+                - Daten werden Aufbereitet
+        - Metadata Repository (Data Catalog als synonym)
+            - Am besten ein einziges Metadata Repository aber häufig gar nicht möglich
+            - Created, woher kommst du, how to use
+        - Sandbox
+            - Reinwerfen der Rohdaten
+        - Data Lakehouse
+            - unterschied zum Data Lake ist  das man auch Strukturierte Analysen machen kann
+            - = Data Lake + Data Warehouse
+            - Folie 45: d ist eigentlich nichts anderes wie c 
+            - Folie 46 Rechtes Bild: man kann sagen
+                - Bronze: Staging
+                - Silver: Data Warehouse
+                - Gold: Data Mart
+        - Data Fabric 
+            - Daten werden nicht gespeichert sondern nur aufbereitet
+            - Als einfaches Beispiel wäre es sowas wie eine View oder Materialized View
+        - Data Product (Data Mesh)
+            - Fachbereiche bekommen die Möglichkeit ihre eigenen Datentöpfen zu erstellen
+            - Data Mesh = Kombination von Data Product
+            - Data Product soll maximal klein sein
+            - also jeder baut gefühlt sein eigenes Datenset und wenn jemand was davon braucht dann müssen Sie sich vernetztend
+# Scenario
+    - wo landen die echtzeit daten? senoren, gps an einem ort oder unterschiedlichen orten⇒ unterschiedliche orten  
+    - ERP: 
+        - Lagerbestand
+        - Lieferdaten
+        - Buchhaltung
+    - CRM:
+        - Kundendaten
+        - manuell feedback sammeln und dann anhängen, skala
+    - GPS vom shipping
+    - Temperatur Sensoren für die Lagerung im LKW sowie im lager, gestreamt, alert wenn was ist
+    - Domänen: Vertrieb, Lager, Transport, HR, IT, Verwaltung
+    - lkw standort aktuell aber nicht gestreatm
+    - prduktspezifische anforderungen als unstruktiert oder semi
